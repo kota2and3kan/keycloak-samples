@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: keycloak
+spec:
+  template:
+    spec:
+      containers:
+        - name: keycloak
+          volumeMounts:
+            - name: samples-authorization-code-grant
+              mountPath: /samples/authorization-code-grant
+            - name: samples-device-authorization-grant
+              mountPath: /samples/device-authorization-grant
+      volumes:
+        - name: samples-authorization-code-grant
+          configMap:
+            name: samples-authorization-code-grant
+            defaultMode: 0755
+        - name: samples-device-authorization-grant
+          configMap:
+            name: samples-device-authorization-grant
+            defaultMode: 0755
