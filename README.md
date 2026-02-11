@@ -6,7 +6,7 @@
 kubectl apply -k .
 ```
 
-## How to setup Keycloak
+## How to set up Keycloak
 
 ### Authorization Code Grant Sample
 
@@ -18,4 +18,10 @@ kubectl exec -it keycloak-0 -- /samples/authorization-code-grant/setup-keycloak.
 
 ```console
 kubectl exec -it keycloak-0 -- /samples/device-authorization-grant/setup-keycloak.sh
+```
+
+## How to clean up Keycloak
+
+```console
+kubectl delete -k .
 ```
