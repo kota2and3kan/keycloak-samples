@@ -15,6 +15,14 @@ configMapGenerator:
       - samples/device-authorization-grant/client.json
       - samples/device-authorization-grant/user.json
       - samples/device-authorization-grant/setup-keycloak.sh
+  - name: samples-cockroachdb-sso
+    files:
+      - samples/cockroachdb-sso/client-scope.json
+      - samples/cockroachdb-sso/client.json
+      - samples/cockroachdb-sso/profile.json
+      - samples/cockroachdb-sso/user-buri.json
+      - samples/cockroachdb-sso/user-goki.json
+      - samples/cockroachdb-sso/setup-keycloak.sh
 
 patches:
   - path: patches/keycloak-samples-volume.yaml

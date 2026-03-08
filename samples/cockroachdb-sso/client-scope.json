@@ -1,0 +1,43 @@
+{
+  "name" : "crdb",
+  "description" : "",
+  "protocol" : "openid-connect",
+  "attributes" : {
+    "include.in.token.scope" : "false",
+    "display.on.consent.screen" : "true",
+    "gui.order" : "",
+    "consent.screen.text" : "",
+    "include.in.openid.provider.metadata" : "true"
+  },
+  "protocolMappers" : [ {
+    "name" : "crdb_roles",
+    "protocol" : "openid-connect",
+    "protocolMapper" : "oidc-usermodel-attribute-mapper",
+    "consentRequired" : false,
+    "config" : {
+      "introspection.token.claim" : "false",
+      "userinfo.token.claim" : "true",
+      "user.attribute" : "crdb_roles",
+      "id.token.claim" : "true",
+      "lightweight.claim" : "false",
+      "access.token.claim" : "false",
+      "claim.name" : "crdb_roles",
+      "jsonType.label" : "JSON"
+    }
+  }, {
+    "name" : "crdb_user",
+    "protocol" : "openid-connect",
+    "protocolMapper" : "oidc-usermodel-attribute-mapper",
+    "consentRequired" : false,
+    "config" : {
+      "introspection.token.claim" : "false",
+      "userinfo.token.claim" : "true",
+      "user.attribute" : "crdb_user",
+      "id.token.claim" : "true",
+      "lightweight.claim" : "false",
+      "access.token.claim" : "false",
+      "claim.name" : "crdb_user",
+      "jsonType.label" : "String"
+    }
+  } ]
+}

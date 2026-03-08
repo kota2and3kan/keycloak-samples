@@ -1,0 +1,71 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cockroachdb-setup-sso
+data:
+  setup-sso.sql: |
+    -- Create roles for SSO users.
+    CREATE ROLE IF NOT EXISTS foo;
+    CREATE ROLE IF NOT EXISTS bar;
+    CREATE ROLE IF NOT EXISTS baz;
+
+    -- Enable OIDC authentication on DB Console.
+    SET CLUSTER SETTING server.oidc_authentication.client_id = 'cockroachdb-sso-client';
+    SET CLUSTER SETTING server.oidc_authentication.client_secret = 'cockroachdb-sso-sample-client-password';
+    SET CLUSTER SETTING server.oidc_authentication.provider_url = 'http://keycloak/realms/cockroachdb-sso-realm';
+    SET CLUSTER SETTING server.oidc_authentication.redirect_url = 'https://localhost:8080/oidc/v1/callback';
+    SET CLUSTER SETTING server.oidc_authentication.scopes = 'openid email crdb';
+    SET CLUSTER SETTING server.oidc_authentication.claim_json_key = 'crdb_user';
+    SET CLUSTER SETTING server.oidc_authentication.enabled = true;
+    SET CLUSTER SETTING security.provisioning.oidc.enabled = true;
+    SET CLUSTER SETTING server.oidc_authentication.authorization.enabled = true;
+    SET CLUSTER SETTING server.oidc_authentication.group_claim = 'crdb_roles';
+    SET CLUSTER SETTING server.oidc_authentication.button_text = 'Log in with Keycloak';
+
+    -- Enable SSO for SQL interface.
+    SET CLUSTER SETTING server.jwt_authentication.issuers.configuration = 'http://keycloak/realms/cockroachdb-sso-realm';
+    SET CLUSTER SETTING server.jwt_authentication.audience = 'cockroachdb-sso-client';
+    SET CLUSTER SETTING server.jwt_authentication.claim = 'crdb_user';
+    SET CLUSTER SETTING server.jwt_authentication.jwks_auto_fetch.enabled = true;
+    SET CLUSTER SETTING server.oidc_authentication.generate_cluster_sso_token.enabled = true;
+    SET CLUSTER SETTING server.oidc_authentication.generate_cluster_sso_token.use_token = id_token;
+    SET CLUSTER SETTING server.jwt_authentication.enabled = true;
+    SET CLUSTER SETTING security.provisioning.jwt.enabled = true;
+    SET CLUSTER SETTING server.jwt_authentication.authorization.enabled = true;
+    SET CLUSTER SETTING server.jwt_authentication.group_claim = 'crdb_roles';
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: cockroachdb-client
+spec:
+  serviceAccountName: cockroachdb
+  containers:
+  - name: cockroachdb-client
+    image: cockroachdb/cockroach:v26.1.0
+    volumeMounts:
+    - name: client-certs
+      mountPath: /cockroach/cockroach-certs/
+    - name: setup-sso
+      mountPath: /setup
+    command:
+    - sleep
+    - inf
+  terminationGracePeriodSeconds: 0
+  volumes:
+  - name: client-certs
+    projected:
+      sources:
+        - secret:
+            name: cockroachdb-client-secret
+            items:
+              - key: ca.crt
+                path: ca.crt
+              - key: tls.crt
+                path: client.root.crt
+              - key: tls.key
+                path: client.root.key
+      defaultMode: 256
+  - name: setup-sso
+    configMap:
+      name: cockroachdb-setup-sso
