@@ -12,6 +12,8 @@ spec:
               mountPath: /samples/authorization-code-grant
             - name: samples-device-authorization-grant
               mountPath: /samples/device-authorization-grant
+            - name: samples-cockroachdb-sso
+              mountPath: /samples/cockroachdb-sso
       volumes:
         - name: samples-authorization-code-grant
           configMap:
@@ -20,4 +22,8 @@ spec:
         - name: samples-device-authorization-grant
           configMap:
             name: samples-device-authorization-grant
+            defaultMode: 0755
+        - name: samples-cockroachdb-sso
+          configMap:
+            name: samples-cockroachdb-sso
             defaultMode: 0755

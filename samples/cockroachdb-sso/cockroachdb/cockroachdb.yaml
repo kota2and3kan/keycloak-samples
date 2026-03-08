@@ -1,0 +1,13 @@
+service:
+  public:
+    type: LoadBalancer
+
+storage:
+  persistentVolume:
+    enabled: false
+
+tls:
+  enabled: true
+
+statefulset:
+  terminationGracePeriodSeconds: 0

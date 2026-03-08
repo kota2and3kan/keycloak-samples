@@ -1,0 +1,24 @@
+{
+  "username" : "goki",
+  "firstName" : "Goki",
+  "lastName" : "Buri",
+  "email" : "goki@example.com",
+  "emailVerified" : false,
+  "attributes" : {
+    "crdb_user" : [ "goki" ],
+    "crdb_roles" : [ "[\"foo\", \"bar\"]" ]
+  },
+  "enabled" : true,
+  "totp" : false,
+  "disableableCredentialTypes" : [ ],
+  "requiredActions" : [ ],
+  "notBefore" : 0,
+  "access" : {
+    "manageGroupMembership" : true,
+    "resetPassword" : true,
+    "view" : true,
+    "mapRoles" : true,
+    "impersonate" : true,
+    "manage" : true
+  }
+}
